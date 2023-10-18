@@ -31,7 +31,7 @@ export async function InProgressTab({ userId }: { userId: string }) {
         {challenges.map((challenge) => (
           <TableRow key={challenge.id}>
             <TableCell className="font-medium underline">
-              <Link href={`/challenge/${challenge.id}`}>{challenge.name}</Link>
+              <Link href={`/challenge/${challenge.slug}`}>{challenge.name}</Link>
             </TableCell>
             <TableCell>{getRelativeTime(challenge.submission[0]!.createdAt)}</TableCell>
           </TableRow>
@@ -41,24 +41,25 @@ export async function InProgressTab({ userId }: { userId: string }) {
   );
 }
 
-async function getInProgressChallenges(id: string) {
+async function getInProgressChallenges(userId: string) {
   const challenges = await prisma.challenge.findMany({
     where: {
       AND: [
         {
           submission: {
             none: {
-              userId: id,
+              userId,
               isSuccessful: true,
             },
           },
         },
         // Make sure there is at least one submission
-        { submission: { some: { userId: id, isSuccessful: false } } },
+        { submission: { some: { userId, isSuccessful: false } } },
       ],
     },
     select: {
       id: true,
+      slug: true,
       name: true,
       submission: {
         orderBy: {

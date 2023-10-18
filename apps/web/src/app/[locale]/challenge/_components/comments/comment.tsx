@@ -37,6 +37,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui/components/avatar';
 import { Button } from '@repo/ui/components/button';
 import { CommentSkeleton } from './comment-skeleton';
+import { isAdminOrModerator } from '~/utils/auth-guards';
 
 interface SingleCommentProps {
   comment: PaginatedComments['comments'][number];
@@ -263,8 +264,7 @@ function SingleComment({
   replyQueryKey,
   preselectedCommentMetadata,
 }: SingleCommentProps) {
-  const params = useParams();
-  const challengeId = params.id as string;
+  const { slug } = useParams();
   const searchParams = useSearchParams();
   const replyId = searchParams.get('replyId');
   const queryClient = useQueryClient();
@@ -302,9 +302,9 @@ function SingleComment({
     }
   }
 
-  async function copyPathNotifyUser(isReply: boolean, challengeId: string) {
+  async function copyPathNotifyUser(isReply: boolean, slug: string) {
     try {
-      await copyCommentUrlToClipboard(isReply, challengeId);
+      await copyCommentUrlToClipboard(isReply, slug);
       toast({
         title: 'Success!',
         variant: 'success',
@@ -320,13 +320,13 @@ function SingleComment({
     }
   }
 
-  async function copyCommentUrlToClipboard(isReply: boolean, challengeId: string) {
+  async function copyCommentUrlToClipboard(isReply: boolean, slug: string) {
     const commentId = isReply ? comment.parentId : comment.id;
     const paramsObj = { replyId: String(comment.id) };
     const searchParams = new URLSearchParams(paramsObj);
 
     const { rootType, rootSolutionId } = comment;
-    const baseURL = `${window.location.origin}/challenge/${challengeId}`;
+    const baseURL = `${window.location.origin}/challenge/${slug}`;
     const hasGetParams = isReply ? `?${searchParams.toString()}` : '';
 
     const shareUrl =
@@ -340,6 +340,7 @@ function SingleComment({
   const loggedinUser = useSession();
 
   const isAuthor = loggedinUser.data?.user.id === comment.user.id;
+  const isAdminAndModerator = isAdminOrModerator(loggedinUser.data);
 
   useEffect(() => {
     if (!isHighlighted) return;
@@ -435,7 +436,7 @@ function SingleComment({
                   size="xs"
                   className="gap-2"
                   onClick={() => {
-                    copyPathNotifyUser(Boolean(isReply), challengeId);
+                    copyPathNotifyUser(Boolean(isReply), slug as string);
                   }}
                 >
                   <Share className="h-3 w-3" />
@@ -472,7 +473,7 @@ function SingleComment({
                 </TooltipContent>
               </Tooltip>
             ) : null}
-            {isAuthor ? (
+            {isAuthor || isAdminAndModerator ? (
               <Tooltip>
                 <CommentDeleteDialog asChild comment={comment}>
                   <TooltipTrigger asChild>

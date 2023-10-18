@@ -1,5 +1,5 @@
 <p align=center >
-  <img alt="Github" height=20 src="https://img.shields.io/github/stars/typehero/typehero?style=&logo=github&logoColor=white&label=Stars&labelColor=%23111&color=%23111" />
+  <img alt="GitHub" height=20 src="https://img.shields.io/github/stars/typehero/typehero?style=&logo=github&logoColor=white&label=Stars&labelColor=%23111&color=%23111" />
   <a href="https://discord.gg/trashdev" target="_parent">
     <img alt="Discord" height=20 src="https://img.shields.io/discord/796594544980000808?style=&logo=discord&logoColor=white&label=%20&labelColor=%237389D8&color=%237389D8" />
   </a>
@@ -8,7 +8,7 @@
   </a>
 </p>
 
-![typehero header](./media/og.png)
+![typehero header](./media/og-hub-banner.png)
 
 ### 👋 About Us
 
@@ -46,7 +46,18 @@ If you find the project interesting and want to support us please consider spons
     </td>
     <td>
       <a href="https://www.herodevs.com/" target="_parent">
-        <img src="./media/herodevs.svg" alt="HeroDevs Logo" title="HeroDevs" width="200">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="./media/herodevs-dark.png">
+          <img alt="HeroDevs Logo" src="./media/herodevs.png" width="200">
+        </picture>
+      </a>
+    </td>
+    <td>
+      <a href="https://www.uploadthing.com/" target="_parent">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="./media/uploadthing-logo-dark.svg">
+          <img alt="Uploadthing Logo" src="./media/uploadthing-logo.svg" width="200">
+        </picture>
       </a>
     </td>
   </tr>
